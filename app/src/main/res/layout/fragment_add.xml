@@ -10,11 +10,9 @@
 
     <EditText
         android:id="@+id/title_et"
-
         android:background="@android:color/transparent"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:ems="10"
@@ -27,13 +25,11 @@
 
     <Spinner
         android:id="@+id/priorities_spinner"
-
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:entries="@array/priorities"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-
         android:layout_width="0dp"
         android:layout_height="60dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +39,6 @@
 
     <EditText
         android:id="@+id/description_et"
-
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:hint="@string/description"
@@ -51,7 +46,6 @@
         android:paddingStart="24dp"
         android:paddingTop="16dp"
         android:paddingEnd="24dp"
-
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:ems="10"

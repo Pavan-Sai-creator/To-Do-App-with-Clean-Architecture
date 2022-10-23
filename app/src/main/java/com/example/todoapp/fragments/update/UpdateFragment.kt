@@ -1,5 +1,6 @@
 package com.example.todoapp.fragments.update
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -43,8 +44,9 @@ class UpdateFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.menu_save){
-            updateItem()
+        when(item.itemId){
+            R.id.menu_save -> updateItem()
+            R.id.menu_delete -> confirmItemRemoval()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -70,5 +72,23 @@ class UpdateFragment : Fragment() {
         }else{
             Toast.makeText(requireContext(),"Please fill all fields.",Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // Show alert dialogue to confirm removal
+    private fun confirmItemRemoval() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes"){_,_ ->
+            mToDoViewModel.deleteItem(args.currentItem)
+            Toast.makeText(
+                requireContext(),
+                "Successfully removed ${args.currentItem.title}",
+                Toast.LENGTH_SHORT
+            ).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("No"){_,_ -> }
+        builder.setTitle("Delete '${args.currentItem.title}' ?")
+        builder.setMessage("Are you sure you want to remove '${args.currentItem.title}' ?")
+        builder.create().show()
     }
 }
