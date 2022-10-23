@@ -23,20 +23,25 @@ class UpdateFragment : Fragment() {
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private val args by navArgs<UpdateFragmentArgs>()
     lateinit var view: FragmentUpdateBinding
+
+    private var _binding: FragmentUpdateBinding? = null
+    private val binding get() = _binding!!
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        view = FragmentUpdateBinding.inflate(inflater,container,false)
+        // Databinding
+        _binding = FragmentUpdateBinding.inflate(inflater,container,false)
+        binding.args = args
 
         setHasOptionsMenu(true)
-        view.currentTitleEt.setText(args.currentItem.title)
-        view.currentDescriptionEt.setText(args.currentItem.description)
-        view.currentPrioritiesSpinner.setSelection(mSharedViewModel.parsePriorityToInt(args.currentItem.priority))
-        view.currentPrioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
 
-        return view.root
+        // Spinner item selected listener
+        binding.currentPrioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
+
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -52,9 +57,9 @@ class UpdateFragment : Fragment() {
     }
 
     private fun updateItem(){
-        val title = view.currentTitleEt.text.toString()
-        val description = view.currentDescriptionEt.text.toString()
-        val getPriority = view.currentPrioritiesSpinner.selectedItem.toString()
+        val title = binding.currentTitleEt.text.toString()
+        val description = binding.currentDescriptionEt.text.toString()
+        val getPriority = binding.currentPrioritiesSpinner.selectedItem.toString()
 
         val validation = mSharedViewModel.verifyDataFromUser(title,description)
         if(validation){
@@ -90,5 +95,10 @@ class UpdateFragment : Fragment() {
         builder.setTitle("Delete '${args.currentItem.title}' ?")
         builder.setMessage("Are you sure you want to remove '${args.currentItem.title}' ?")
         builder.create().show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
