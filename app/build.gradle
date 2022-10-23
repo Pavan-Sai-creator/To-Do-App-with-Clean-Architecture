@@ -84,4 +84,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
+    // DataBinding
+    kapt "com.android.databinding:compiler:3.2.0-alpha10"
+
 }
