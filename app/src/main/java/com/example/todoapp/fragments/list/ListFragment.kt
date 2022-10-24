@@ -3,6 +3,7 @@ package com.example.todoapp.fragments.list
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,7 +22,7 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private val mSharedViewModel: SharedViewModel by viewModels()
@@ -99,6 +100,11 @@ class ListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu,menu)
+        val search: MenuItem = menu.findItem(R.id.menu_search)
+        val searchView: SearchView? = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled  = true
+        searchView?.setOnQueryTextListener(this)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -106,6 +112,30 @@ class ListFragment : Fragment() {
             confirmRemoval()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(query != null){
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query != null){
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchThroughDatabase(query: String) {
+        var searchQuery: String = query
+        searchQuery = "%$searchQuery%"
+        mToDoViewModel.searchDatabase(searchQuery).observe(this, Observer { list ->
+            list?.let {
+                adapter.setData(it)
+            }
+        })
     }
 
     // Show alert dialogue to confirm removal of all items from database table
@@ -129,4 +159,6 @@ class ListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }
